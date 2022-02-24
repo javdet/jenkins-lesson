@@ -3,7 +3,7 @@ pipeline {
         label 'infra'
     }
     tools {
-        terraform 'terraform151'
+        terraform 'terraform115'
     }
     stages {
         stage('Hello world') {
