@@ -2,12 +2,8 @@ pipeline {
     agent {
         label 'infra'
     }
-    tools {
-        terraform 'terraform115'
-    }
     environment {
-      AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
-      AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
+      YC_TOKEN = credentials('yc_token')
     }
     stages {
         stage('Init') {
