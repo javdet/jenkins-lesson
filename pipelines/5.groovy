@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Init') {
             steps {
-                sh 'apt update && apt install -y ca-certificates'
+                sh 'sudo apt update && sudo apt install -y ca-certificates'
                 dir("terraform") {
                     sh 'terraform init'
                 }
