@@ -1,24 +1,32 @@
-data "aws_ami" "ubuntu2004" {
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20220131"]
+resource "yandex_compute_instance" "manager" {
+  count = 3
+
+  name        = format("manager-%02d", count.index + 1)
+  hostname    = format("manager-%02d", count.index + 1)
+  description = format("manager-%02d", count.index + 1)
+  folder_id   = var.folder_id
+  zone        = var.zone
+  platform_id = "standard-v2"
+
+  allow_stopping_for_update = true
+
+  resources {
+    cores         = 2
+    core_fraction = 100
+    memory        = 4
   }
-  owners = ["amazon", "099720109477"]
-}
 
-resource "aws_instance" "rabbitmq" {
-    ami                          = data.aws_ami.ubuntu2004.id
-    associate_public_ip_address  = false
-    ebs_optimized                = false
-    instance_type                = "t3a.nano"
-    key_name                     = "jenkins"
-    subnet_id                    = "subnet-9d9b98e0"
-
-    root_block_device {
-        delete_on_termination = true
-        encrypted             = false
-        volume_size           = 20
-        volume_type           = "standard"
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu_2004.id
+      size     = 30
+      type     = "network-ssd"
     }
+  }
+
+  network_interface {
+    subnet_id          = var.subnet
+    nat                = true
+  }
+  
 }
